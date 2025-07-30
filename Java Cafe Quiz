@@ -1,0 +1,168 @@
+
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class JavaCafe {
+    static Scanner scannerObj = new Scanner(System.in);
+    static String currentUser = "";
+
+    public static void main(String[] args) {
+        login();
+
+        int opt = 0;
+        boolean flag = true;
+
+        while (flag) {
+            PrintHeader();
+            Menu();
+            System.out.println("Please select an option: ");
+            opt = scannerObj.nextInt();
+            scannerObj.nextLine(); // consume newline
+
+            switch (opt) {
+                case 1:
+                    System.out.println("");
+                    Print();
+                    optionalQuiz("Print Statements");
+                    break;
+                case 2:
+                    System.out.println("");
+                    Loops();
+                    optionalQuiz("Loops");
+                    break;
+                case 3:
+                    System.out.println("");
+                    Ifelse();
+                    optionalQuiz("If-else Statements");
+                    break;
+                case 4:
+                    System.out.println("");
+                    Logout();
+                    flag = false;
+                    break;
+                default:
+                    System.out.println("Invalid option!");
+            }
+        }
+
+        scannerObj.close();
+    }
+
+    public static void login() {
+        System.out.println("===== Login =====");
+        System.out.print("Enter UserID: ");
+        String userId = scannerObj.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scannerObj.nextLine();
+        currentUser = userId;
+        System.out.println("\nWelcome, " + currentUser + "!\n");
+    }
+
+    public static void PrintHeader() {
+        System.out.println("Welcome to JAVA Cafe!!! \n");
+        System.out.println("The central learning pub for all things JAVA!! \n");
+        System.out.println("Select any number down below to get started! \n");
+        System.out.println("========================================================");
+    }
+
+    public static void Menu() {
+        System.out.println("**************************************");
+        System.out.println("**          1. Print Statements     **");
+        System.out.println("**          2. Loops                **");
+        System.out.println("**          3. If-else Statements   **");
+        System.out.println("**          4. Log Out              **");
+        System.out.println("**************************************");
+    }
+
+    public static void Print() {
+        System.out.println("Output values in JAVA are written as println('').");
+        System.out.println("The user must first write System.out.println.");
+        System.out.println("Anything the user wants to type goes into the double quotes.\n");
+    }
+
+    public static void Loops() {
+        System.out.println("Loops in JAVA can execute a block of code as long as a specified condition is reached.");
+        System.out.println("There are different types of loops. The while loop and for loop.");
+        System.out.println("while loop: while (condition) { //code }");
+        System.out.println("for loop: for (init; condition; update) { //code } \n");
+    }
+
+    public static void Ifelse() {
+        System.out.println("1) if: executes if condition is true.");
+        System.out.println("   Example: if (x > 5) { ... }");
+        System.out.println("2) else: runs if condition is false.");
+        System.out.println("3) else if: checks another condition if the first is false.");
+    }
+
+    public static void Logout() {
+        System.out.println("You have LOGGED OUT! GOODBYE!");
+    }
+
+    // ========== Quiz System ==========
+    public static void optionalQuiz(String topic) {
+        System.out.print("Would you like to take a quiz on this topic? (yes/no): ");
+        String choice = scannerObj.nextLine().trim().toLowerCase();
+
+        if (choice.equals("yes")) {
+            boolean passed = false;
+            switch (topic) {
+                case "Print Statements":
+                    passed = quizPrint();
+                    break;
+                case "Loops":
+                    passed = quizLoops();
+                    break;
+                case "If-else Statements":
+                    passed = quizIfElse();
+                    break;
+            }
+            saveQuizResult(currentUser, topic, passed);
+            System.out.println(passed ? "Good job!" : "Incorrect!");
+        } else {
+            System.out.println("Skipped quiz.\n");
+        }
+    }
+
+    public static boolean quizPrint() {
+        System.out.println("\n[QUIZ] Print Statements");
+        System.out.println("Q1. What is used to display output in Java?");
+        System.out.println("A) print.out.println");
+        System.out.println("B) System.out.print");
+        System.out.println("C) System.out.println");
+        System.out.println("D) Print.system");
+        System.out.print("Answer: ");
+        String ans = scannerObj.nextLine();
+        return ans.trim().equalsIgnoreCase("C");
+    }
+
+    public static boolean quizLoops() {
+        System.out.println("\n[QUIZ] Loops");
+        System.out.println("Q1. A 'for' loop is ideal when:");
+        System.out.println("A) You don't know the number of iterations");
+        System.out.println("B) You want to run forever");
+        System.out.println("C) You know how many times to loop");
+        System.out.println("D) You hate 'while'");
+        System.out.print("Answer: ");
+        String ans = scannerObj.nextLine();
+        return ans.trim().equalsIgnoreCase("C");
+    }
+
+    public static boolean quizIfElse() {
+        System.out.println("\n[QUIZ] If-Else Statements");
+        System.out.println("True/False: An 'else' block runs when the 'if' condition is true.");
+        System.out.print("Answer (true/false): ");
+        String ans = scannerObj.nextLine();
+        return ans.trim().equalsIgnoreCase("false");
+    }
+
+    public static void saveQuizResult(String username, String topic, boolean passed) {
+        try {
+            FileWriter writer = new FileWriter("quiz_log.txt", true);
+            writer.write("User: " + username + " | Topic: " + topic + " | Result: " + (passed ? "Passed" : "Failed") + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving quiz result.");
+        }
+    }
+}
